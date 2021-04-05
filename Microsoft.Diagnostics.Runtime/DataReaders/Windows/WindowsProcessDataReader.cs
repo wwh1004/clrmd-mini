@@ -7,11 +7,13 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
+using Microsoft.Diagnostics.Runtime.DataReaders.Windows;
 using Microsoft.Diagnostics.Runtime.Utilities;
 
 namespace Microsoft.Diagnostics.Runtime {
 	internal sealed unsafe class WindowsProcessDataReader : CommonMemoryReader, IDataReader, IDisposable {
 		private bool _disposed;
+		private readonly WindowsThreadSuspender? _suspension;
 		private readonly int _originalPid;
 		private readonly IntPtr _snapshotHandle;
 		private readonly IntPtr _cloneHandle;
@@ -58,10 +60,15 @@ namespace Microsoft.Diagnostics.Runtime {
 				&& wow64 != targetWow64) {
 				throw new InvalidOperationException("Mismatched architecture between this process and the target process.");
 			}
+
+			if (mode == WindowsProcessDataReaderMode.Suspend)
+				_suspension = new WindowsThreadSuspender(ProcessId);
 		}
 
 		private void Dispose(bool _) {
 			if (!_disposed) {
+				_suspension?.Dispose();
+
 				if (_originalPid != 0) {
 					// We don't want to throw an exception when we fail to free a snapshot.  In practice we never expect this to fail.
 					// If we were able to create a snapshot we should be able to free it.  Throwing an exception here means that our
@@ -131,21 +138,22 @@ namespace Microsoft.Diagnostics.Runtime {
 			return Array.Empty<byte>();
 		}
 
-		public bool GetVersionInfo(ulong addr, out VersionInfo version) {
+		public bool GetVersionInfo(ulong addr, out Version version) {
 			var fileName = new StringBuilder(1024);
 			uint res = GetModuleFileNameEx(_process, new IntPtr((nint)addr), fileName, fileName.Capacity);
 			DebugOnly.Assert(res != 0);
 
-			if (DataTarget.PlatformFunctions.GetFileVersion(fileName.ToString(), out int major, out int minor, out int revision, out int patch)) {
-				version = new VersionInfo(major, minor, revision, patch, true);
+			if (DataTarget.PlatformFunctions.GetFileVersion(fileName.ToString(), out int major, out int minor, out int build, out int revision)) {
+				version = new Version(major, minor, build, revision);
 				return true;
 			}
 
-			version = default;
+			version = new Version(0, 0, 0, 0);
 			return false;
 		}
 
 		public override int Read(ulong address, ref byte buffer, uint length) {
+			DebugOnly.Assert(length != 0);
 			try {
 				fixed (byte* ptr = &buffer) {
 					int res = ReadProcessMemory(_process, new IntPtr((nint)address), ptr, new IntPtr(length), out var read);
@@ -222,9 +230,6 @@ namespace Microsoft.Diagnostics.Runtime {
 			byte* lpBuffer,
 			IntPtr dwSize,
 			out IntPtr lpNumberOfBytesRead);
-
-		[DllImport(Kernel32LibraryName, SetLastError = true)]
-		internal static extern int VirtualQueryEx(IntPtr hProcess, IntPtr lpAddress, out MEMORY_BASIC_INFORMATION lpBuffer, IntPtr dwLength);
 
 		[DllImport(Kernel32LibraryName)]
 		private static extern bool GetThreadContext(IntPtr hThread, IntPtr lpContext);

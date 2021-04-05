@@ -118,6 +118,20 @@ namespace Microsoft.Diagnostics.Runtime {
 		internal static PlatformFunctions PlatformFunctions { get; } = new WindowsFunctions();
 
 		/// <summary>
+		/// Attaches to a running process.  Note that if <paramref name="suspend"/> is set to false the user
+		/// of ClrMD is still responsible for suspending the process itself.  ClrMD does NOT support inspecting
+		/// a running process and will produce undefined behavior when attempting to do so.
+		/// </summary>
+		/// <param name="processId">The ID of the process to attach to.</param> 
+		/// <param name="suspend">Whether or not to suspend the process.</param>
+		/// <returns>A <see cref="DataTarget"/> instance.</returns>
+		[SuppressMessage("Reliability", "CA2000:Dispose objects before losing scope")]
+		public static DataTarget AttachToProcess(int processId, bool suspend) {
+			var mode = suspend ? WindowsProcessDataReaderMode.Suspend : WindowsProcessDataReaderMode.Passive;
+			return new DataTarget(new CustomDataTarget(new WindowsProcessDataReader(processId, mode)));
+		}
+
+		/// <summary>
 		/// Creates a snapshot of a running process and attaches to it.  This method will pause a running process
 		/// 
 		/// </summary>

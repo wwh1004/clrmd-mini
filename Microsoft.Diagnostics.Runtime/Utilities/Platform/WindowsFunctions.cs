@@ -33,8 +33,8 @@ namespace Microsoft.Diagnostics.Runtime.Utilities {
 			return Array.IndexOf(processIds, processId, 0, size / sizeof(int)) >= 0;
 		}
 
-		internal override bool GetFileVersion(string dll, out int major, out int minor, out int revision, out int patch) {
-			major = minor = revision = patch = 0;
+		internal override bool GetFileVersion(string dll, out int major, out int minor, out int build, out int revision) {
+			major = minor = build = revision = 0;
 
 			int len = NativeMethods.GetFileVersionInfoSize(dll, out int handle);
 			if (len <= 0)
@@ -52,8 +52,8 @@ namespace Microsoft.Diagnostics.Runtime.Utilities {
 
 				minor = Unsafe.Read<ushort>((ptr + 8).ToPointer());
 				major = Unsafe.Read<ushort>((ptr + 10).ToPointer());
-				patch = Unsafe.Read<ushort>((ptr + 12).ToPointer());
-				revision = Unsafe.Read<ushort>((ptr + 14).ToPointer());
+				revision = Unsafe.Read<ushort>((ptr + 12).ToPointer());
+				build = Unsafe.Read<ushort>((ptr + 14).ToPointer());
 
 				return true;
 			}

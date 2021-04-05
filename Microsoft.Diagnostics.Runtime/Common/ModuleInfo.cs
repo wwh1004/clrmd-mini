@@ -10,7 +10,7 @@ namespace Microsoft.Diagnostics.Runtime {
 	/// </summary>
 	public sealed class ModuleInfo {
 		private byte[] _buildId;
-		private VersionInfo? _version;
+		private Version? _version;
 		private readonly IDataReader _dataReader;
 
 		internal IDataReader DataReader => _dataReader;
@@ -55,13 +55,13 @@ namespace Microsoft.Diagnostics.Runtime {
 		/// <summary>
 		/// Gets the version information for this file.
 		/// </summary>
-		public VersionInfo Version {
+		public Version Version {
 			get {
-				if (_version.HasValue)
-					return _version.Value;
+				if (_version != null)
+					return _version;
 
-				_version = DataReader.GetVersionInfo(ImageBase, out var version) ? version : default;
-				return version;
+				_version = DataReader.GetVersionInfo(ImageBase, out var version) ? new Version(version.Major, version.Minor, version.Build, version.Revision) : new Version(0, 0, 0, 0);
+				return _version;
 			}
 		}
 

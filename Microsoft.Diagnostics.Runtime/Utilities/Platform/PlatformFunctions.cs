@@ -13,7 +13,7 @@ namespace Microsoft.Diagnostics.Runtime {
 		internal static readonly byte[] s_versionString = Encoding.ASCII.GetBytes("@(#)Version ");
 		internal static readonly int s_versionLength = s_versionString.Length;
 
-		internal abstract bool GetFileVersion(string dll, out int major, out int minor, out int revision, out int patch);
+		internal abstract bool GetFileVersion(string dll, out int major, out int minor, out int build, out int revision);
 		public abstract bool TryGetWow64(IntPtr proc, out bool result);
 
 		/// <param name="libraryPath">The path to the native library to be loaded.</param>
@@ -26,11 +26,11 @@ namespace Microsoft.Diagnostics.Runtime {
 		/// <param name="name">The name of the exported symbol.</param>
 		public abstract IntPtr GetLibraryExport(IntPtr handle, string name);
 
-		public virtual bool IsEqualFileVersion(string file, VersionInfo version) {
-			if (!GetFileVersion(file, out int major, out int minor, out int revision, out int patch))
+		public virtual bool IsEqualFileVersion(string file, Version version) {
+			if (!GetFileVersion(file, out int major, out int minor, out int build, out int revision))
 				return false;
 
-			return major == version.Major && minor == version.Minor && revision == version.Revision && patch == version.Patch;
+			return major == version.Major && minor == version.Minor && build == version.Build && revision == version.Revision;
 		}
 	}
 }

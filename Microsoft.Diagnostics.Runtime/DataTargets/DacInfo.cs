@@ -2,6 +2,8 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System;
+
 namespace Microsoft.Diagnostics.Runtime {
 	/// <summary>
 	/// This class provides information needed to located the correct CLR diagnostics DLL (this dll
@@ -44,7 +46,7 @@ namespace Microsoft.Diagnostics.Runtime {
 		/// Gets the version information for the CLR this dac matches.  The dac will have the
 		/// same version.
 		/// </summary>
-		public VersionInfo Version { get; }
+		public Version Version { get; }
 
 		/// <summary>
 		/// If CLR has a build id on this platform, this property will contain its build id.
@@ -55,7 +57,7 @@ namespace Microsoft.Diagnostics.Runtime {
 		/// Constructs a DacInfo object with the appropriate properties initialized.
 		/// </summary>
 		public DacInfo(string? localPath, string specificName, string agnosticName, Architecture targetArch,
-					   int filesize, int timestamp, VersionInfo version, byte[] clrBuildId) {
+					   int filesize, int timestamp, Version version, byte[] clrBuildId) {
 			LocalDacPath = localPath;
 			PlatformSpecificFileName = specificName;
 			PlatformAgnosticFileName = agnosticName;

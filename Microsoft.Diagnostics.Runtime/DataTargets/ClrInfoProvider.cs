@@ -59,9 +59,9 @@ namespace Microsoft.Diagnostics.Runtime {
 		/// <summary>
 		/// Returns the file name of the DAC dll for the requests to the symbol server.
 		/// </summary>
-		public static string GetDacRequestFileName(ClrFlavor flavor, Architecture currentArchitecture, Architecture targetArchitecture, VersionInfo version) {
+		public static string GetDacRequestFileName(ClrFlavor flavor, Architecture currentArchitecture, Architecture targetArchitecture, Version version) {
 			string? dacNameBase = flavor == ClrFlavor.Core ? c_coreDacFileNameBase : c_desktopDacFileNameBase;
-			return $"{dacNameBase}_{currentArchitecture}_{targetArchitecture}_{version.Major}.{version.Minor}.{version.Revision}.{version.Patch:D2}.dll";
+			return $"{dacNameBase}_{currentArchitecture}_{targetArchitecture}_{version.Major}.{version.Minor}.{version.Build}.{version.Revision:D2}.dll";
 		}
 	}
 }

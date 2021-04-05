@@ -97,12 +97,12 @@ namespace Microsoft.Diagnostics.Runtime.Implementation {
 			// than creating a tiny HashSet.
 			foreach (var domain in AppDomains)
 				foreach (var module in domain.Modules)
-					if (Array.IndexOf(sharedModules, module) != -1)
+					if (Array.IndexOf(sharedModules, module) == -1)
 						yield return module;
 
 			if (SystemDomain != null)
 				foreach (var module in SystemDomain.Modules)
-					if (Array.IndexOf(sharedModules, module) != -1)
+					if (Array.IndexOf(sharedModules, module) == -1)
 						yield return module;
 		}
 	}

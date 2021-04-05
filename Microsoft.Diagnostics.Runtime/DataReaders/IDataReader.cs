@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using System.Collections.Generic;
 
 namespace Microsoft.Diagnostics.Runtime {
@@ -50,7 +51,7 @@ namespace Microsoft.Diagnostics.Runtime {
 		/// </summary>
 		/// <param name="baseAddress">The base address of the module to look up.</param>
 		/// <param name="version">The version info for the given module.</param>
-		bool GetVersionInfo(ulong baseAddress, out VersionInfo version);
+		bool GetVersionInfo(ulong baseAddress, out Version version);
 
 		/// <summary>
 		/// Gets the thread context for the given thread.

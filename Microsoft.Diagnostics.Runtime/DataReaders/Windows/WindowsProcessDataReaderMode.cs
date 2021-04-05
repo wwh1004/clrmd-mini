@@ -4,6 +4,8 @@
 
 namespace Microsoft.Diagnostics.Runtime {
 	internal enum WindowsProcessDataReaderMode {
-		Snapshot
+		Suspend,
+		Snapshot,
+		Passive
 	}
 }
