@@ -3,7 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 namespace Microsoft.Diagnostics.Runtime {
-	public interface IMemoryReader {
+	internal interface IMemoryReader {
 		/// <summary>
 		/// Gets the size of a pointer in the target process.
 		/// </summary>

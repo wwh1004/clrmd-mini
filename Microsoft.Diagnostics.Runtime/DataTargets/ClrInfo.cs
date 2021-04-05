@@ -33,7 +33,7 @@ namespace Microsoft.Diagnostics.Runtime {
 		/// <summary>
 		/// Gets module information about the DAC needed create a <see cref="ClrRuntime"/> instance for this runtime.
 		/// </summary>
-		public DacInfo DacInfo { get; }
+		internal DacInfo DacInfo { get; }
 
 		/// <summary>
 		/// Gets module information about the ClrInstance.

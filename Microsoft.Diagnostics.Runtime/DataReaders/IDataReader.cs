@@ -8,7 +8,7 @@ namespace Microsoft.Diagnostics.Runtime {
 	/// <summary>
 	/// An interface for reading data out of the target process.
 	/// </summary>
-	public interface IDataReader : IMemoryReader {
+	internal interface IDataReader : IMemoryReader {
 		/// <summary>
 		/// The name of the target.  This should be a meaningful moniker such as the pid of the target
 		/// process or the path to the dump being read.  This is primarily used when debugging to see

@@ -23,7 +23,7 @@ namespace Microsoft.Diagnostics.Runtime {
 		/// <summary>
 		/// Gets the data reader for this instance.
 		/// </summary>
-		public IDataReader DataReader { get; }
+		internal IDataReader DataReader { get; }
 
 		/// <summary>
 		/// Creates a DataTarget from the given reader.
@@ -108,11 +108,6 @@ namespace Microsoft.Diagnostics.Runtime {
 			char[] invalid = Path.GetInvalidPathChars();
 			var modules = DataReader.EnumerateModules().Where(m => m.FileName != null && m.FileName.IndexOfAny(invalid) < 0).ToArray();
 			Array.Sort(modules, (a, b) => a.ImageBase.CompareTo(b.ImageBase));
-
-#pragma warning disable CS0618 // Type or member is obsolete
-			foreach (var module in modules)
-				module.DataTarget = this;
-#pragma warning restore CS0618 // Type or member is obsolete
 
 			return _modules = modules;
 		}

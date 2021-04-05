@@ -7,7 +7,7 @@ namespace Microsoft.Diagnostics.Runtime {
 	/// This class provides information needed to located the correct CLR diagnostics DLL (this dll
 	/// is called the Debug Access Component (DAC)).
 	/// </summary>
-	public sealed class DacInfo {
+	internal sealed class DacInfo {
 		/// <summary>
 		/// If a local dac exists on disk that matches this dac, this property will contain its full path.
 		/// In a live debugging scenario this will almost always point to a local dac which can be used to inspect

@@ -120,7 +120,7 @@ namespace Microsoft.Diagnostics.Runtime {
 				GetFileProperties(baseAddr, out int filesize, out int timestamp);
 
 				string fileName = sb.ToString();
-				var module = new ModuleInfo(this, baseAddr, fileName, true, filesize, timestamp, Array.Empty<byte>());
+				var module = new ModuleInfo(this, baseAddr, fileName, filesize, timestamp, Array.Empty<byte>());
 				result.Add(module);
 			}
 
