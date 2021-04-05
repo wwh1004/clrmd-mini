@@ -7,8 +7,7 @@ using Microsoft.Diagnostics.Runtime;
 namespace Example {
 	internal static class Program {
 		private static void Main() {
-			using var process = Process.GetProcessesByName("devenv")[0];
-			using var dataTarget = DataTarget.CreateSnapshotAndAttach(process.Id);
+			using var dataTarget = DataTarget.CreateSnapshotAndAttach(Process.GetCurrentProcess().Id);
 			dataTarget.EnumerateModules();
 			foreach (var clrModule in dataTarget.ClrVersions.Select(t => t.CreateRuntime()).SelectMany(t => t.AppDomains).SelectMany(t => t.Modules)) {
 				if (clrModule.IsDynamic)
